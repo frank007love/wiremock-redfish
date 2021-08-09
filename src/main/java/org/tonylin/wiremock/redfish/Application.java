@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.tonylin.wiremock.redfish.extensions.FaultStubMappingTransformer;
 import org.tonylin.wiremock.redfish.extensions.SocketTimedOutResponseTransformer;
+import org.tonylin.wiremock.redfish.extensions.redfishevent.RedfishAddSubscriptionStubRequestFilter;
 
 import com.github.tomakehurst.wiremock.standalone.WireMockServerRunner;
 
@@ -13,7 +14,7 @@ public class Application {
 	private static final String REDFISH_HTTPS_PORT = "443";
 	private static final String REDFISH_HTTP_PORT = "80";
 	private static final List<Class<?>> EXTENSION_CLASSES = Arrays.asList(FaultStubMappingTransformer.class,
-			SocketTimedOutResponseTransformer.class);
+			SocketTimedOutResponseTransformer.class, RedfishAddSubscriptionStubRequestFilter.class);
 
 	private static String getExtensions() {
 		return EXTENSION_CLASSES.stream().map(Class::getName).collect(Collectors.joining(","));
