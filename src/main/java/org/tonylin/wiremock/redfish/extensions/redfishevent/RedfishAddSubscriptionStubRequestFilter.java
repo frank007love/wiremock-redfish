@@ -20,6 +20,13 @@ import com.google.common.base.Strings;
 
 public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
 	private static final String REDFISH_PROTOCOL = "Redfish";
+	
+	private static String PORT = "80";
+	
+	public static void setPort(String port) {
+		PORT = port;
+	}
+	
     @Override
     public String getName() {
         return "RedfishAddSubscriptionStubRequestFilter";
@@ -108,7 +115,7 @@ public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
 			RedfishEventRecorder.getInstance().markSubscription(redfishEventRequestBody.getContext(), redfishEventRequestBody.getDestination());
 			
 			Request wrapRequest = RequestWrapper.create()
-					.transformBody(body->new Body(body.asString().replaceAll(":\\d+", ":80")))
+					.transformBody(body->new Body(body.asString().replaceAll(":\\d+", ":"+PORT)))
 					.wrap(request);
 			
 			return RequestFilterAction.continueWith(wrapRequest);

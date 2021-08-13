@@ -33,6 +33,8 @@ public class Application {
 				"--extensions",
 				getExtensions()};
 
+		RedfishAddSubscriptionStubRequestFilter.setPort(REDFISH_HTTP_PORT);
+		
 		WireMockServerRunner.main(redfishArgs);
 	}
 
