@@ -1,0 +1,23 @@
+{
+  "@odata.context": "/redfish/v1/$metadata#EventService/Members/Events/105",
+  "@odata.id": "/redfish/v1/EventService/Events/105",
+  "@odata.type": "#EventService.v1_0_0.Event",
+  "Id": "105",
+  "Name": "Event Array",
+  "Events": [
+    {
+      "EventType": "Alert",
+      "Severity": "OK",
+      "EventTimestamp": "2018/09/19 03:58:28",
+      "Message": "Drive Presence",
+      "MessageArgs": [
+        ""
+      ],
+      "MessageId": "Alert.1.0.IPMISensorEvent",
+      "OriginOfCondition": {
+        
+      },
+      "Context": "mock_service"
+    }
+  ]
+}
