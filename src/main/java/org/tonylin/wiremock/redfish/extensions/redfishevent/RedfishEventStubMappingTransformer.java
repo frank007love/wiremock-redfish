@@ -58,7 +58,7 @@ public class RedfishEventStubMappingTransformer extends StubMappingTransformer {
 		Parameters parameters = new Parameters();
 		parameters.put("method", "POST");
 		parameters.put("url", "{{jsonPath originalRequest.body '$.Destination'}}");
-		parameters.put("body", postEvent);
+		parameters.put("body", postEvent.getRawData());
 		
 		Map<String, Object> delay = new HashMap<>();
 		delay.put("type", "fixed");

@@ -5,6 +5,9 @@ import static com.github.tomakehurst.wiremock.common.LocalNotifier.notifier;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,16 +18,17 @@ import com.github.tomakehurst.wiremock.extension.requestfilter.RequestFilter;
 import com.github.tomakehurst.wiremock.extension.requestfilter.RequestFilterAction;
 import com.github.tomakehurst.wiremock.extension.requestfilter.RequestWrapper;
 import com.github.tomakehurst.wiremock.http.Body;
+import com.github.tomakehurst.wiremock.http.HttpClientFactory;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.google.common.base.Strings;
 
 public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
 	private static final String REDFISH_PROTOCOL = "Redfish";
 	
-	private static String PORT = "80";
+	private static String WIREMOCK_HTTP_PORT = "80";
 	
 	public static void setPort(String port) {
-		PORT = port;
+		WIREMOCK_HTTP_PORT = port;
 	}
 	
     @Override
@@ -81,17 +85,17 @@ public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
 		}
 		
 		private void publishEventToSource(String destination, String requestBody) {
-//			HttpPost post = new HttpPost(destination);
-//			post.setEntity(new StringEntity(requestBody, "utf-8"));
-//			CloseableHttpClient httpClient = HttpClientFactory.createClient();
-//			try {
-//				CloseableHttpResponse response = httpClient.execute(post);
-//				notifier().info(String.format("Handle post redfish event to %s: %s", destination, response.getStatusLine()));
-//			} catch (IOException e) {
-//				notifier().error(String.format("Failed to post redfish event: %s", e.getMessage()));
-//			} finally {
-//				closeHttpClient(httpClient);
-//			}	
+			HttpPost post = new HttpPost(destination);
+			post.setEntity(new StringEntity(requestBody, "utf-8"));
+			CloseableHttpClient httpClient = HttpClientFactory.createClient();
+			try {
+				CloseableHttpResponse response = httpClient.execute(post);
+				notifier().info(String.format("Handle post redfish event to %s: %s", destination, response.getStatusLine()));
+			} catch (IOException e) {
+				notifier().error(String.format("Failed to post redfish event: %s", e.getMessage()));
+			} finally {
+				closeHttpClient(httpClient);
+			}	
 		}
 		
 		private RequestFilterAction handlePostRedfishEventsRequest(Request request, RedfishEvents redfishEventRequestBody) {
@@ -115,7 +119,7 @@ public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
 			RedfishEventRecorder.getInstance().markSubscription(redfishEventRequestBody.getContext(), redfishEventRequestBody.getDestination());
 			
 			Request wrapRequest = RequestWrapper.create()
-					.transformBody(body->new Body(body.asString().replaceAll(":\\d+", ":"+PORT)))
+					.transformBody(body->new Body(body.asString().replaceAll(":\\d+", ":"+WIREMOCK_HTTP_PORT)))
 					.wrap(request);
 			
 			return RequestFilterAction.continueWith(wrapRequest);
