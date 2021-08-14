@@ -22,7 +22,7 @@ import com.github.tomakehurst.wiremock.http.HttpClientFactory;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.google.common.base.Strings;
 
-public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
+public class RedfishSubscriptionRequestFilter implements RequestFilter {
 	private static final String REDFISH_PROTOCOL = "Redfish";
 	
 	private static String WIREMOCK_HTTP_PORT = "80";
@@ -43,12 +43,12 @@ public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
     }
     
     private interface HandleRequestState {
-    	RequestFilterAction handle(Request request, RedfishAddSubscriptionStubRequestFilter context);
+    	RequestFilterAction handle(Request request, RedfishSubscriptionRequestFilter context);
     }
     
     private static class InitState implements HandleRequestState {
 		@Override
-		public RequestFilterAction handle(Request request, RedfishAddSubscriptionStubRequestFilter context) {
+		public RequestFilterAction handle(Request request, RedfishSubscriptionRequestFilter context) {
 			boolean isRecordingStart = request.getAbsoluteUrl().endsWith("__admin/recordings/start");
 			if( isRecordingStart ) {
 				RedfishEventRecorder.getInstance().start();
@@ -66,7 +66,7 @@ public class RedfishAddSubscriptionStubRequestFilter implements RequestFilter {
     	}
     	
 		@Override
-		public RequestFilterAction handle(Request request, RedfishAddSubscriptionStubRequestFilter context) {
+		public RequestFilterAction handle(Request request, RedfishSubscriptionRequestFilter context) {
 			boolean isRecordingStop = request.getAbsoluteUrl().endsWith("__admin/recordings/stop");
 			if( isRecordingStop ) {
 				RedfishEventRecorder.getInstance().stop();
