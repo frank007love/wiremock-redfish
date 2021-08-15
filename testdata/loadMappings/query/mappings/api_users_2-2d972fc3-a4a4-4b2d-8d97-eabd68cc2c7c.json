@@ -1,0 +1,32 @@
+{
+  "id" : "2d972fc3-a4a4-4b2d-8d97-eabd68cc2c7c",
+  "name" : "api_users_2",
+  "request" : {
+    "url" : "/api/users/2",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"data\":{\"id\":2,\"email\":\"janet.weaver@reqres.in\",\"first_name\":\"Janet\",\"last_name\":\"Weaver\",\"avatar\":\"https://reqres.in/img/faces/2-image.jpg\"},\"support\":{\"url\":\"https://reqres.in/#support-heading\",\"text\":\"To keep ReqRes free, contributions towards server costs are appreciated!\"}}",
+    "headers" : {
+      "Date" : "Sun, 15 Aug 2021 13:30:24 GMT",
+      "Content-Type" : "application/json; charset=utf-8",
+      "x-powered-by" : "Express",
+      "etag" : "W/\"118-pbdwwFo9SKNhD3Lx5iHJyngpq00\"",
+      "via" : "1.1 vegur",
+      "Cache-Control" : "max-age=14400",
+      "CF-Cache-Status" : "REVALIDATED",
+      "Accept-Ranges" : "bytes",
+      "Expect-CT" : "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+      "Report-To" : "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=1VUUBPW82RYVGeHIld9voh0u6LXqGRVEnXNgXiMX4LBnJCEpNdyUlKHoM1wRHiey9elTwiFWg8QIi583NzuTtyXIQv0XvcgPCJJJ7PjjoKPYDuQ2ZkZuH98CF04%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+      "NEL" : "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+      "Vary" : "Accept-Encoding",
+      "Server" : "cloudflare",
+      "CF-RAY" : "67f2c6f8daf31f1f-NRT",
+      "alt-svc" : "h3-27=\":443\"; ma=86400, h3-28=\":443\"; ma=86400, h3-29=\":443\"; ma=86400, h3=\":443\"; ma=86400"
+    }
+  },
+  "uuid" : "2d972fc3-a4a4-4b2d-8d97-eabd68cc2c7c",
+  "persistent" : true,
+  "insertionIndex" : 1
+}
