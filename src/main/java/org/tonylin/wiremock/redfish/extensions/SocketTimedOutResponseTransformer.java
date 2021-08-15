@@ -11,7 +11,7 @@ public class SocketTimedOutResponseTransformer extends ResponseTransformer {
 
     @Override
     public Response transform(Request request, Response response, FileSource files, Parameters parameters) {
-    	if(response.getStatus()==500&&response.getBodyAsString().contains("timed out")) {
+    	if(response.getStatus()==500&&response.getBodyAsString().contains("Network failure")) {
     		return Response.Builder.like(response)
     				.body(String.valueOf(Fault.CONNECTION_RESET_BY_PEER))
     				.fault(Fault.CONNECTION_RESET_BY_PEER).build();

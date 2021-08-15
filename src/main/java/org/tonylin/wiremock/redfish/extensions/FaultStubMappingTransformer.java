@@ -19,7 +19,7 @@ public class FaultStubMappingTransformer extends StubMappingTransformer {
     }
 
     private Fault getFault(ResponseDefinition responseDef) {
-    	String body = Objects.toString(responseDef.getBody(), "");
+    	String body = Objects.toString(new String(responseDef.getByteBody()), "");
     	try {
 			return Fault.valueOf(body);
     	} catch (IllegalArgumentException e) {
@@ -40,7 +40,7 @@ public class FaultStubMappingTransformer extends StubMappingTransformer {
 	@Override
 	public StubMapping transform(StubMapping stubMapping, FileSource files, Parameters parameters) {
 		ResponseDefinition responseDef = stubMapping.getResponse();
-		
+
 		if( responseDef.getStatus() == 500) {
 			setupFaultResponseDef(stubMapping);
 		}

@@ -2,3 +2,5 @@
 /__files/
 /mappings/
 /bin/
+/build/
+/.gradle/

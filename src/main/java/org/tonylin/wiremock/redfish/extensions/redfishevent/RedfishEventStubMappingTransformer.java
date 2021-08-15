@@ -9,6 +9,7 @@ import org.tonylin.wiremock.redfish.extensions.redfishevent.RedfishEventRecorder
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.extension.PostServeActionDefinition;
@@ -18,6 +19,8 @@ import com.github.tomakehurst.wiremock.matching.RequestPattern;
 import com.github.tomakehurst.wiremock.stubbing.StubMapping;
 
 public class RedfishEventStubMappingTransformer extends StubMappingTransformer {
+	private ObjectMapper objectMapper = new ObjectMapper();
+	
 	@Override
 	public String getName() {
 		return "RedfishEventStubMappingTransformer";
@@ -27,8 +30,8 @@ public class RedfishEventStubMappingTransformer extends StubMappingTransformer {
 		if(!requestPattern.getUrl().contains("/redfish/v1/EventService/Subscriptions")) {
 			return true;
 		}
-		
-		if( requestPattern.getBodyPatterns().isEmpty() )
+		if( requestPattern.getBodyPatterns() == null ||
+				requestPattern.getBodyPatterns().isEmpty() )
 			return true;
 		
 		return !(requestPattern.getBodyPatterns().get(0) instanceof EqualToJsonPattern);
@@ -36,7 +39,17 @@ public class RedfishEventStubMappingTransformer extends StubMappingTransformer {
 	
 	private void removeDestination(RequestPattern requestPattern) {
 		EqualToJsonPattern bodyPattern = (EqualToJsonPattern)requestPattern.getBodyPatterns().get(0);
-		String removedDestBodyString = bodyPattern.getEqualToJson().replaceAll("\"Destination\":.*,", "");
+		final String bodyString = bodyPattern.getEqualToJson();
+		String removedDestBodyString = null;
+		
+		try {
+			ObjectNode objectNode = (ObjectNode)objectMapper.readTree(bodyString);
+			objectNode.remove("Destination");
+			removedDestBodyString = objectMapper.writeValueAsString(objectNode);
+		} catch (JsonProcessingException e) {
+			throw new IllegalStateException(e);
+		}
+
 		EqualToJsonPattern  newBodyPattern = new EqualToJsonPattern(removedDestBodyString, true, true);
 		requestPattern.getBodyPatterns().clear();
 		requestPattern.getBodyPatterns().add(newBodyPattern);
@@ -45,7 +58,6 @@ public class RedfishEventStubMappingTransformer extends StubMappingTransformer {
 	private String parseContext(StubMapping stubMapping) {
 		RequestPattern requestPattern = stubMapping.getRequest();
 		EqualToJsonPattern bodyPattern = (EqualToJsonPattern)requestPattern.getBodyPatterns().get(0);
-		ObjectMapper objectMapper = new ObjectMapper();
 		
 		try {
 			return objectMapper.readValue(bodyPattern.getEqualToJson(), SubscribeRedfishRequestBody.class).getContext();
@@ -70,6 +82,9 @@ public class RedfishEventStubMappingTransformer extends StubMappingTransformer {
 	
 	private void applyRedfishEvents(StubMapping stubMapping) {
 		String context = parseContext(stubMapping);
+		if( context == null )
+			return;
+		
 		List<Event> postEvents = RedfishEventRecorder.getInstance().getEvents(context);
 		List<PostServeActionDefinition> postServerActionDefinitions = postEvents.stream()
 				.map(this::toParameters)

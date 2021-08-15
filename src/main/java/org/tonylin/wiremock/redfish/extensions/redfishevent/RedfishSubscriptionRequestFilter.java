@@ -131,7 +131,8 @@ public class RedfishSubscriptionRequestFilter implements RequestFilter {
 				return null;
 			
 			try {
-				return objectMapper.readValue(bodyString, RedfishEvents.class);
+				RedfishEvents redfishEvents = objectMapper.readValue(bodyString, RedfishEvents.class);
+				return redfishEvents.getEvents().isEmpty() ? null : redfishEvents;
 			} catch (JsonProcessingException e) {
 				return null;
 			}
